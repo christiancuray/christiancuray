@@ -1,5 +1,5 @@
 # 💫 About Me:
- am a Computer Programming and Analysis student at Seneca Polytechnic, passionate about coding and problem-solving. Skilled in C++, Web Development, and SQL
+ I am a Computer Programming and Analysis student at Seneca Polytechnic, passionate about coding and problem-solving. Skilled in C++, Web Development, and SQL
 
 
 ## 🌐 Socials:
