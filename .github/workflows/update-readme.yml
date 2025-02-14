@@ -35,5 +35,5 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git add README.md
           git commit -m "🔄 Updated README with random quote"
-          git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/christiancuray/christiancuray.git
+          git remote set-url origin https://x-access-token:${{ secrets.GH_SECRET }}@github.com/christiancuray/christiancuray.git
           git push origin HEAD:main
