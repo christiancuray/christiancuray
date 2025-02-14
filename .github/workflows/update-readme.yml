@@ -9,11 +9,13 @@ jobs:
   update-readme:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      
       - name: Install jq
         run: |
           sudo apt-get install jq
@@ -33,8 +35,5 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git add README.md
           git commit -m "🔄 Updated README with random quote"
-          git push
-
-          # Set the token for authentication and push the changes
-          git remote set-url origin  https://github.com/christiancuray/christiancuray.git 
-          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/christiancuray/christiancuray HEAD:main
+          git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/christiancuray/christiancuray.git
+          git push origin HEAD:main
