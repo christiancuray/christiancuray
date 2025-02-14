@@ -18,21 +18,17 @@ jobs:
 
       - name: Install jq
         run: |
-          sudo apt-get update
-          sudo apt-get install -y jq
+          sudo apt-get install jq
 
       - name: Fetch Random Quote
-         run: |
+        run: |
           QUOTE=$(curl -s "https://api.quotable.io/random" | jq -r '.content')
           AUTHOR=$(curl -s "https://api.quotable.io/random" | jq -r '.author')
 
           echo "### ✨ Quote of the Day: \"$QUOTE\" - $AUTHOR" > README.md
           echo "" >> README.md
 
-          
       - name: Commit and Push Changes
-        env:
-          GH_TOKEN: ${{ secrets.GH_SECRET }}
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
@@ -40,4 +36,3 @@ jobs:
           git commit -m "🔄 Updated README with random quote"
           git remote set-url origin https://x-access-token:${{ secrets.GH_SECRET }}@github.com/christiancuray/christiancuray.git
           git push origin HEAD:main
-
