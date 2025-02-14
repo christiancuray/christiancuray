@@ -1,0 +1,31 @@
+name: Update README with Random Quote
+
+on:
+  schedule:
+    - cron: '0 0,12 * * *'  # Runs every 12 hours at midnight and noon UTC
+  workflow_dispatch:  # Allows manual trigger
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Fetch Random Quote
+        run: |
+          QUOTE=$(curl -s "https://api.quotable.io/random" | jq -r '.content')
+          AUTHOR=$(curl -s "https://api.quotable.io/random" | jq -r '.author')
+
+          echo "### ✨ Quote of the Day: \"$QUOTE\" - $AUTHOR" > README.md
+          echo "" >> README.md
+          echo "### ⏳ Last Updated: $(date)" >> README.md
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add README.md
+          git commit -m "🔄 Updated README with random quote"
+          git push
