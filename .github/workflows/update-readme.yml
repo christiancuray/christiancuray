@@ -22,21 +22,14 @@ jobs:
           sudo apt-get install -y jq
 
       - name: Fetch Random Quote
-        run: |
-          RESPONSE=$(curl -s "https://api.quotable.io/random")
-          if [ $? -ne 0 ]; then
-            echo "Failed to fetch quote"
-            exit 1
-          fi
-          echo "API Response: $RESPONSE"
-          
-          QUOTE=$(echo $RESPONSE | jq -r '.content')
-          AUTHOR=$(echo $RESPONSE | jq -r '.author')
+         run: |
+          QUOTE=$(curl -s "https://api.quotable.io/random" | jq -r '.content')
+          AUTHOR=$(curl -s "https://api.quotable.io/random" | jq -r '.author')
 
           echo "### ✨ Quote of the Day: \"$QUOTE\" - $AUTHOR" > README.md
           echo "" >> README.md
-          echo "### ⏳ Last Updated: $(date)" >> README.md
 
+          
       - name: Commit and Push Changes
         env:
           GH_TOKEN: ${{ secrets.GH_SECRET }}
