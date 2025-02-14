@@ -1,8 +1,3 @@
-The job failed due to a process completion error with exit code 60. This suggests an issue with the `curl` command or the API response handling.
-
-To fix this, ensure error handling for the `curl` command and update the script to append to `README.md` correctly. Here is the corrected workflow file:
-
-```yaml
 name: Update README with Random Quote
 
 on:
@@ -52,4 +47,4 @@ jobs:
           git commit -m "🔄 Updated README with random quote"
           git remote set-url origin https://x-access-token:${{ secrets.GH_SECRET }}@github.com/christiancuray/christiancuray.git
           git push origin HEAD:main
-```
+
