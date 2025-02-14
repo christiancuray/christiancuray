@@ -1,3 +1,8 @@
+The job failed due to a process completion error with exit code 60. This suggests an issue with the `curl` command or the API response handling.
+
+To fix this, ensure error handling for the `curl` command and update the script to append to `README.md` correctly. Here is the corrected workflow file:
+
+```yaml
 name: Update README with Random Quote
 
 on:
@@ -19,11 +24,15 @@ jobs:
       - name: Install jq
         run: |
           sudo apt-get update
-          sudo apt-get install jq
+          sudo apt-get install -y jq
 
       - name: Fetch Random Quote
         run: |
           RESPONSE=$(curl -s "https://api.quotable.io/random")
+          if [ $? -ne 0 ]; then
+            echo "Failed to fetch quote"
+            exit 1
+          fi
           echo "API Response: $RESPONSE"
           
           QUOTE=$(echo $RESPONSE | jq -r '.content')
@@ -31,8 +40,11 @@ jobs:
 
           echo "### ✨ Quote of the Day: \"$QUOTE\" - $AUTHOR" > README.md
           echo "" >> README.md
+          echo "### ⏳ Last Updated: $(date)" >> README.md
 
       - name: Commit and Push Changes
+        env:
+          GH_TOKEN: ${{ secrets.GH_SECRET }}
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
@@ -40,3 +52,4 @@ jobs:
           git commit -m "🔄 Updated README with random quote"
           git remote set-url origin https://x-access-token:${{ secrets.GH_SECRET }}@github.com/christiancuray/christiancuray.git
           git push origin HEAD:main
+```
