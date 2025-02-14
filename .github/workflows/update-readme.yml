@@ -36,5 +36,5 @@ jobs:
           git push
 
           # Set the token for authentication and push the changes
-          git remote set-url origin https://github.com/${{ github.repository }}.git
-          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:main
+          git remote set-url origin  https://github.com/christiancuray/christiancuray.git 
+          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/christiancuray/christiancuray HEAD:main
