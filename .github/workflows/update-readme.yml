@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: write
+      contents: write  # Required for pushing changes
 
     steps:
       - name: Checkout repository
@@ -18,15 +18,26 @@ jobs:
 
       - name: Install jq
         run: |
-          sudo apt-get install jq
+          sudo apt-get update
+          sudo apt-get install -y jq
 
       - name: Fetch Random Quote
+        id: get-quote
         run: |
-          QUOTE=$(curl -s "https://api.quotable.io/random" | jq -r '.content')
-          AUTHOR=$(curl -s "https://api.quotable.io/random" | jq -r '.author')
-
-          echo "### ✨ Quote of the Day: \"$QUOTE\" - $AUTHOR" > README.md
-          echo "" >> README.md
+          # Get both quote and author from the same API response
+          QUOTE_DATA=$(curl -s "https://api.quotable.io/random")
+          QUOTE=$(echo "$QUOTE_DATA" | jq -r '.content')
+          AUTHOR=$(echo "$QUOTE_DATA" | jq -r '.author')
+          
+          # Write to README.md while preserving existing content
+          echo -e "### ✨ Quote of the Day:\n\n\"$QUOTE\"\n\n*— $AUTHOR*" > section.md
+          
+          # Replace <!-- QUOTE_START --> <!-- QUOTE_END --> section in README
+          sed -i '/<!-- QUOTE_START -->/,/<!-- QUOTE_END -->/{
+              /<!-- QUOTE_START -->/r section.md
+              /<!-- QUOTE_END -->/!d
+              }' README.md
+          rm section.md
 
       - name: Commit and Push Changes
         run: |
@@ -34,5 +45,4 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git add README.md
           git commit -m "🔄 Updated README with random quote"
-          git remote set-url origin https://x-access-token:${{ secrets.GH_SECRET }}@github.com/christiancuray/christiancuray.git
           git push origin HEAD:main
